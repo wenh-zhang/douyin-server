@@ -6,6 +6,7 @@ import (
 )
 
 func main() {
+
 	svr := core.NewServer(new(CoreServiceImpl))
 
 	err := svr.Run()

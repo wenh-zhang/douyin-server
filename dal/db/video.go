@@ -49,9 +49,9 @@ func MGetVideosByUserID(ctx context.Context, userIDs []int64) ([]*Video, error) 
 }
 
 // MGetVideosByTime multiple get list of video info
-func MGetVideosByTime(ctx context.Context, lastTime time.Time, limit int) ([]*Video, error) {
+func MGetVideosByTime(ctx context.Context, latestTime int64, limit int) ([]*Video, error) {
 	res := make([]*Video, 0)
-	if err := dal.DB.WithContext(ctx).Where("created_at < ?", lastTime).Order("created_at desc").Limit(limit).Find(&res).Error; err != nil {
+	if err := dal.DB.WithContext(ctx).Where("created_at <= ?", time.Unix(latestTime, 0).Format(constants.TimestampFormatStr)).Order("created_at desc").Limit(limit).Find(&res).Error; err != nil {
 		return nil, err
 	}
 	return res, nil

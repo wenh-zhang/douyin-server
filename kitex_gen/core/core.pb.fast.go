@@ -554,6 +554,11 @@ func (x *DouyinPublishActionRequest) FastRead(buf []byte, _type int8, number int
 		if err != nil {
 			goto ReadFieldError
 		}
+	case 4:
+		offset, err = x.fastReadField4(buf, _type)
+		if err != nil {
+			goto ReadFieldError
+		}
 	default:
 		offset, err = fastpb.Skip(buf, _type, number)
 		if err != nil {
@@ -573,11 +578,16 @@ func (x *DouyinPublishActionRequest) fastReadField1(buf []byte, _type int8) (off
 }
 
 func (x *DouyinPublishActionRequest) fastReadField2(buf []byte, _type int8) (offset int, err error) {
-	x.Data, offset, err = fastpb.ReadBytes(buf, _type)
+	x.PlayUrl, offset, err = fastpb.ReadString(buf, _type)
 	return offset, err
 }
 
 func (x *DouyinPublishActionRequest) fastReadField3(buf []byte, _type int8) (offset int, err error) {
+	x.CoverUrl, offset, err = fastpb.ReadString(buf, _type)
+	return offset, err
+}
+
+func (x *DouyinPublishActionRequest) fastReadField4(buf []byte, _type int8) (offset int, err error) {
 	x.Title, offset, err = fastpb.ReadString(buf, _type)
 	return offset, err
 }
@@ -1098,6 +1108,7 @@ func (x *DouyinPublishActionRequest) FastWrite(buf []byte) (offset int) {
 	offset += x.fastWriteField1(buf[offset:])
 	offset += x.fastWriteField2(buf[offset:])
 	offset += x.fastWriteField3(buf[offset:])
+	offset += x.fastWriteField4(buf[offset:])
 	return offset
 }
 
@@ -1110,18 +1121,26 @@ func (x *DouyinPublishActionRequest) fastWriteField1(buf []byte) (offset int) {
 }
 
 func (x *DouyinPublishActionRequest) fastWriteField2(buf []byte) (offset int) {
-	if len(x.Data) == 0 {
+	if x.PlayUrl == "" {
 		return offset
 	}
-	offset += fastpb.WriteBytes(buf[offset:], 2, x.Data)
+	offset += fastpb.WriteString(buf[offset:], 2, x.PlayUrl)
 	return offset
 }
 
 func (x *DouyinPublishActionRequest) fastWriteField3(buf []byte) (offset int) {
+	if x.CoverUrl == "" {
+		return offset
+	}
+	offset += fastpb.WriteString(buf[offset:], 3, x.CoverUrl)
+	return offset
+}
+
+func (x *DouyinPublishActionRequest) fastWriteField4(buf []byte) (offset int) {
 	if x.Title == "" {
 		return offset
 	}
-	offset += fastpb.WriteString(buf[offset:], 3, x.Title)
+	offset += fastpb.WriteString(buf[offset:], 4, x.Title)
 	return offset
 }
 
@@ -1605,6 +1624,7 @@ func (x *DouyinPublishActionRequest) Size() (n int) {
 	n += x.sizeField1()
 	n += x.sizeField2()
 	n += x.sizeField3()
+	n += x.sizeField4()
 	return n
 }
 
@@ -1617,18 +1637,26 @@ func (x *DouyinPublishActionRequest) sizeField1() (n int) {
 }
 
 func (x *DouyinPublishActionRequest) sizeField2() (n int) {
-	if len(x.Data) == 0 {
+	if x.PlayUrl == "" {
 		return n
 	}
-	n += fastpb.SizeBytes(2, x.Data)
+	n += fastpb.SizeString(2, x.PlayUrl)
 	return n
 }
 
 func (x *DouyinPublishActionRequest) sizeField3() (n int) {
+	if x.CoverUrl == "" {
+		return n
+	}
+	n += fastpb.SizeString(3, x.CoverUrl)
+	return n
+}
+
+func (x *DouyinPublishActionRequest) sizeField4() (n int) {
 	if x.Title == "" {
 		return n
 	}
-	n += fastpb.SizeString(3, x.Title)
+	n += fastpb.SizeString(4, x.Title)
 	return n
 }
 
@@ -1785,8 +1813,9 @@ var fieldIDToName_DouyinUserResponse = map[int32]string{
 
 var fieldIDToName_DouyinPublishActionRequest = map[int32]string{
 	1: "UserId",
-	2: "Data",
-	3: "Title",
+	2: "PlayUrl",
+	3: "CoverUrl",
+	4: "Title",
 }
 
 var fieldIDToName_DouyinPublishActionResponse = map[int32]string{

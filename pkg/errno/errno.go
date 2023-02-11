@@ -13,6 +13,7 @@ const (
 	AuthorizationFailedErrCode = 10004
 	LackTokenErrCode           = 10005
 	TokenTimeOutErrCode        = 10006
+	UserNotExistErrCode = 10007
 )
 
 type ErrNo struct {
@@ -45,6 +46,7 @@ var (
 	AuthorizationFailedErr = NewErrNo(AuthorizationFailedErrCode, "Authorization failed")
 	LackTokenErr           = NewErrNo(LackTokenErrCode, "Lack parameter token")
 	TokenTimeOutErr        = NewErrNo(TokenTimeOutErrCode, "Token time out")
+	UserNotExistErr = NewErrNo(UserNotExistErrCode, "User not exists")
 )
 
 // ConvertErr convert error to Errno

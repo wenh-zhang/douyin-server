@@ -2,8 +2,8 @@ package db
 
 import (
 	"context"
-	"douyin/dal"
-	"douyin/pkg/constants"
+	"douyin/pkg/constant"
+	"gorm.io/gorm"
 	"time"
 )
 
@@ -15,31 +15,53 @@ type Favorite struct {
 }
 
 func (*Favorite) TableName() string {
-	return constants.FavoriteTableName
+	return constant.FavoriteTableName
 }
 
-// MGetFavorites multiple get list of favorites info
-func MGetFavorites(ctx context.Context, videoID, userID *int64) ([]*Favorite, error) {
-	res := make([]*Favorite, 0)
-	params := make(map[string]interface{})
-	if videoID != nil {
-		params["video_id"] = *videoID
+// GetFavoritesCountByVideoID get video favorite count
+func GetFavoritesCountByVideoID(ctx context.Context, db *gorm.DB, videoID int64) (int64, error) {
+	var count int64
+	if err := db.WithContext(ctx).Model(&Favorite{}).Where("video_id = ?", videoID).Count(&count).Error; err != nil {
+		return 0, err
 	}
-	if userID != nil {
-		params["user_id"] = *userID
-	}
-	if err := dal.DB.WithContext(ctx).Where(params).Order("created_at desc").Find(&res).Error; err != nil {
+	return count, nil
+}
+
+func MGetFavoriteVideoIDsByUserID(ctx context.Context, db *gorm.DB, userID int64) ([]int64, error) {
+	videoIDs := make([]int64, 0)
+	if err := db.WithContext(ctx).Model(&Favorite{}).Where("user_id = ?", userID).Select("video_id").Order("created_at desc").Find(&videoIDs).Error; err != nil {
 		return nil, err
 	}
-	return res, nil
+	return videoIDs, nil
+}
+
+func CheckIfFavorite(ctx context.Context, db *gorm.DB, videoID, userID int64) (bool, error) {
+	var count int64
+	if err := db.WithContext(ctx).Model(&Favorite{}).Where("video_id = ? and user_id = ?", videoID, userID).Count(&count).Error; err != nil {
+		return false, err
+	}
+	if count == 0 {
+		return false, nil
+	}
+	return true, nil
 }
 
 // CreateFavorite create favorite info
-func CreateFavorite(ctx context.Context, favorites []*Favorite) error {
-	return dal.DB.WithContext(ctx).Create(favorites).Error
+func CreateFavorite(ctx context.Context, db *gorm.DB, favorites []*Favorite) error {
+	return db.WithContext(ctx).Create(favorites).Error
 }
 
 // DeleteFavorite delete favorite info
-func DeleteFavorite(ctx context.Context, videoID, userID int64) error {
-	return dal.DB.WithContext(ctx).Where("video_id = ? and user_id = ?", videoID, userID).Delete(&Favorite{}).Error
+func DeleteFavorite(ctx context.Context, db *gorm.DB, videoID, userID int64) error {
+	return db.WithContext(ctx).Where("video_id = ? and user_id = ?", videoID, userID).Delete(&Favorite{}).Error
+}
+
+// DeleteFavoriteOfVideo delete favorite info of a video
+func DeleteFavoriteOfVideo(ctx context.Context, db *gorm.DB, videoID int64) error{
+	return db.WithContext(ctx).Where("video_id = ?", videoID).Delete(&Favorite{}).Error
+}
+
+// DeleteFavoriteOfUser delete favorite info of a user
+func DeleteFavoriteOfUser(ctx context.Context, db *gorm.DB, userID int64) error{
+	return db.WithContext(ctx).Where("user_id = ?", userID).Delete(&Favorite{}).Error
 }

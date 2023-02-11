@@ -70,8 +70,9 @@ message douyin_user_response {
 
 message douyin_publish_action_request {
   int64 user_id = 1; // 用户id
-  bytes data = 2; // 视频数据
-  string title = 3; // 视频标题
+  string play_url = 2; //视频地址
+  string cover_url = 3; //封面地址
+  string title = 4; // 视频标题
 }
 
 message douyin_publish_action_response {
@@ -92,7 +93,7 @@ message douyin_publish_list_response {
 
 service CoreService {
   rpc Feed (douyin_feed_request) returns (douyin_feed_response) {}
-  rpc UserRegister (douyin_user_register_request) returns (douyin_feed_response) {}
+  rpc UserRegister (douyin_user_register_request) returns (douyin_user_register_response) {}
   rpc UserLogin (douyin_user_login_request) returns (douyin_user_login_response) {}
   rpc UserInfo (douyin_user_request) returns (douyin_user_response) {}
   rpc PublishAction (douyin_publish_action_request) returns (douyin_publish_action_response) {}

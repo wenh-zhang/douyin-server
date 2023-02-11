@@ -12,7 +12,7 @@ import (
 // Client is designed to provide IDL-compatible methods with call-option parameter for kitex framework.
 type Client interface {
 	Feed(ctx context.Context, Req *core.DouyinFeedRequest, callOptions ...callopt.Option) (r *core.DouyinFeedResponse, err error)
-	UserRegister(ctx context.Context, Req *core.DouyinUserRegisterRequest, callOptions ...callopt.Option) (r *core.DouyinFeedResponse, err error)
+	UserRegister(ctx context.Context, Req *core.DouyinUserRegisterRequest, callOptions ...callopt.Option) (r *core.DouyinUserRegisterResponse, err error)
 	UserLogin(ctx context.Context, Req *core.DouyinUserLoginRequest, callOptions ...callopt.Option) (r *core.DouyinUserLoginResponse, err error)
 	UserInfo(ctx context.Context, Req *core.DouyinUserRequest, callOptions ...callopt.Option) (r *core.DouyinUserResponse, err error)
 	PublishAction(ctx context.Context, Req *core.DouyinPublishActionRequest, callOptions ...callopt.Option) (r *core.DouyinPublishActionResponse, err error)
@@ -53,7 +53,7 @@ func (p *kCoreServiceClient) Feed(ctx context.Context, Req *core.DouyinFeedReque
 	return p.kClient.Feed(ctx, Req)
 }
 
-func (p *kCoreServiceClient) UserRegister(ctx context.Context, Req *core.DouyinUserRegisterRequest, callOptions ...callopt.Option) (r *core.DouyinFeedResponse, err error) {
+func (p *kCoreServiceClient) UserRegister(ctx context.Context, Req *core.DouyinUserRegisterRequest, callOptions ...callopt.Option) (r *core.DouyinUserRegisterResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.UserRegister(ctx, Req)
 }

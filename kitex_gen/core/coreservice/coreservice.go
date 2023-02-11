@@ -276,14 +276,14 @@ func (p *UserRegisterArgs) IsSetReq() bool {
 }
 
 type UserRegisterResult struct {
-	Success *core.DouyinFeedResponse
+	Success *core.DouyinUserRegisterResponse
 }
 
-var UserRegisterResult_Success_DEFAULT *core.DouyinFeedResponse
+var UserRegisterResult_Success_DEFAULT *core.DouyinUserRegisterResponse
 
 func (p *UserRegisterResult) FastRead(buf []byte, _type int8, number int32) (n int, err error) {
 	if !p.IsSetSuccess() {
-		p.Success = new(core.DouyinFeedResponse)
+		p.Success = new(core.DouyinUserRegisterResponse)
 	}
 	return p.Success.FastRead(buf, _type, number)
 }
@@ -310,7 +310,7 @@ func (p *UserRegisterResult) Marshal(out []byte) ([]byte, error) {
 }
 
 func (p *UserRegisterResult) Unmarshal(in []byte) error {
-	msg := new(core.DouyinFeedResponse)
+	msg := new(core.DouyinUserRegisterResponse)
 	if err := proto.Unmarshal(in, msg); err != nil {
 		return err
 	}
@@ -318,7 +318,7 @@ func (p *UserRegisterResult) Unmarshal(in []byte) error {
 	return nil
 }
 
-func (p *UserRegisterResult) GetSuccess() *core.DouyinFeedResponse {
+func (p *UserRegisterResult) GetSuccess() *core.DouyinUserRegisterResponse {
 	if !p.IsSetSuccess() {
 		return UserRegisterResult_Success_DEFAULT
 	}
@@ -326,7 +326,7 @@ func (p *UserRegisterResult) GetSuccess() *core.DouyinFeedResponse {
 }
 
 func (p *UserRegisterResult) SetSuccess(x interface{}) {
-	p.Success = x.(*core.DouyinFeedResponse)
+	p.Success = x.(*core.DouyinUserRegisterResponse)
 }
 
 func (p *UserRegisterResult) IsSetSuccess() bool {
@@ -933,7 +933,7 @@ func (p *kClient) Feed(ctx context.Context, Req *core.DouyinFeedRequest) (r *cor
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) UserRegister(ctx context.Context, Req *core.DouyinUserRegisterRequest) (r *core.DouyinFeedResponse, err error) {
+func (p *kClient) UserRegister(ctx context.Context, Req *core.DouyinUserRegisterRequest) (r *core.DouyinUserRegisterResponse, err error) {
 	var _args UserRegisterArgs
 	_args.Req = Req
 	var _result UserRegisterResult

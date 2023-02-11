@@ -1,19 +1,19 @@
 package dal
 
 import (
-	"douyin/pkg/constants"
+	"douyin/pkg/constant"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
-var DB *gorm.DB
+var db *gorm.DB
 
 func init() {
-	DB = GetNewConn()
+	db = GetNewConn()
 }
 
 func GetNewConn() *gorm.DB {
-	db, err := gorm.Open(mysql.Open(constants.MySQLDefaultDSN),
+	db, err := gorm.Open(mysql.Open(constant.MySQLDefaultDSN),
 		&gorm.Config{
 			PrepareStmt:            true,
 			SkipDefaultTransaction: true,
@@ -22,5 +22,9 @@ func GetNewConn() *gorm.DB {
 	if err != nil {
 		panic(err)
 	}
+	return db
+}
+
+func GetConn() *gorm.DB {
 	return db
 }

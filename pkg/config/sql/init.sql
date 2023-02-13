@@ -21,9 +21,9 @@ CREATE TABLE `video`
     `cover_url`      TEXT NULL COMMENT 'Cover url',
     `favorite_count` bigint unsigned NOT NULL DEFAULT 0 COMMENT 'Favorite count',
     `comment_count`  bigint unsigned NOT NULL DEFAULT 0 COMMENT 'Comment count',
-    `title`          TEXT NULL  COMMENT 'Title',
-    `created_at`     timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Video create time',
-    `updated_at`     timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Video update time',
+    `title`          TEXT NULL COMMENT 'Title',
+    `created_at`     timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Video create time',
+    `updated_at`     timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Video update time',
     `deleted_at`     timestamp NULL DEFAULT NULL COMMENT 'Video delete time',
     PRIMARY KEY (`id`),
     KEY              `idx_user_id` (`user_id`) COMMENT 'UserID index'

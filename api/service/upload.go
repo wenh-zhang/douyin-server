@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-// Upload video and cover
+// Upload Process the data acquired from request of publish action
 func Upload(userID int64, c *app.RequestContext) (string, string, error) {
 	playURL, saveFile, err := UploadVideo(userID, c)
 	if err != nil {
@@ -38,7 +38,7 @@ func UploadVideo(userID int64, c *app.RequestContext) (string, string, error) {
 }
 
 func UploadCover(userID int64, playURL string) (string, error) {
-	// todo 截取封面逻辑
+	// todo code of get the video cover, temporarily use a fixed cover instead
 	coverURL := filepath.Join(constant.ServerAddress, "/cover/", "cover.png")
 	coverURL = "http://" + coverURL
 	return coverURL, nil

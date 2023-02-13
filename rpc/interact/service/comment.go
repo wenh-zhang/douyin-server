@@ -64,7 +64,7 @@ func (s *CommentService) CommentAction(req *interact.DouyinCommentActionRequest)
 		tx.Rollback()
 		return nil, errno.ParamErr
 	}
-	if commentCount != video.CommentCount{
+	if commentCount != video.CommentCount {
 		if err = db.UpdateVideo(s.ctx, tx, req.VideoId, nil, nil, nil, video.FavoriteCount, commentCount); err != nil {
 			tx.Rollback()
 			return nil, err

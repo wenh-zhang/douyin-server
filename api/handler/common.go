@@ -6,19 +6,22 @@ import (
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
 
+// Response The return json format of basic request
 type Response struct {
 	StatusCode int32  `json:"status_code"`
 	StatusMsg  string `json:"status_msg,omitempty"`
 }
 
-func NewResponse(err error) Response{
+// NewResponse Build Response base on error type
+func NewResponse(err error) Response {
 	errNo := errno.ConvertErr(err)
 	return Response{
 		StatusCode: errNo.ErrCode,
-		StatusMsg: errNo.ErrMsg,
+		StatusMsg:  errNo.ErrMsg,
 	}
 }
 
-func SendResponse(c *app.RequestContext, obj interface{}){
+// SendResponse Send response in json format
+func SendResponse(c *app.RequestContext, obj interface{}) {
 	c.JSON(consts.StatusOK, obj)
 }

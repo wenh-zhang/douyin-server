@@ -11,17 +11,22 @@ import (
 	"strconv"
 )
 
+// CommentActionResponse The returned json format of comment action request
 type CommentActionResponse struct {
 	Response
 	Comment *interact.Comment `json:"comment,omitempty"`
 }
 
+// CommentListResponse  The returned json format of comment list request
 type CommentListResponse struct {
 	Response
 	CommentList []*interact.Comment `json:"comment_list"`
 }
 
+// CommentAction  Handler of request for user to post a comment
+// user is supposed to log in before sending this request, which means user id can be parsed from token
 func CommentAction(ctx context.Context, c *app.RequestContext) {
+	// get parameters from request context
 	userID, _ := c.Get(constant.TokenUserIdentifyKey)
 	videoIDStr := c.Query(constant.VideoIdentityKey)
 	videoID, err := strconv.ParseInt(videoIDStr, 10, 64)
@@ -49,6 +54,7 @@ func CommentAction(ctx context.Context, c *app.RequestContext) {
 		commentText = &commentTextStr
 	}
 
+	// call RPC service
 	comment, err := rpc.CommentAction(context.Background(), &interact.DouyinCommentActionRequest{
 		UserId:      userID.(int64),
 		VideoId:     videoID,
@@ -66,6 +72,9 @@ func CommentAction(ctx context.Context, c *app.RequestContext) {
 	})
 }
 
+// CommentList Handler of request for user to view list of video comments
+// token may be empty, because users who are not logged in can also view the list
+// this method has no authentication middleware before it
 func CommentList(ctx context.Context, c *app.RequestContext) {
 	request := new(interact.DouyinCommentListRequest)
 	videoIDStr := c.Query(constant.VideoIdentityKey)
@@ -76,6 +85,7 @@ func CommentList(ctx context.Context, c *app.RequestContext) {
 	}
 	request.VideoId = videoID
 
+	// parse the token to find out whether there is user id in it
 	token := c.Query(constant.Token)
 	if len(token) != 0 {
 		claims, err := util.ParseToken(token)
@@ -83,6 +93,8 @@ func CommentList(ctx context.Context, c *app.RequestContext) {
 			request.UserId = claims.UserID
 		}
 	}
+
+	// call RPC service
 	comments, err := rpc.CommentList(context.Background(), request)
 	if err != nil {
 		SendResponse(c, NewResponse(err))

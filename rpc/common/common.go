@@ -24,9 +24,9 @@ func CheckIfLikeVideo(ctx context.Context, tx *gorm.DB, videos []*core.Video, us
 }
 
 // CheckAuthorFromUserID query user info and return map with information of users
-func CheckAuthorFromUserID(ctx context.Context, tx *gorm.DB, queryUserIDs []int64, userID *int64) (map[int64]*core.User, error){
+func CheckAuthorFromUserID(ctx context.Context, tx *gorm.DB, queryUserIDs []int64, userID *int64) (map[int64]*core.User, error) {
 	//query all user info at once
-	if len(queryUserIDs) == 0{
+	if len(queryUserIDs) == 0 {
 		return nil, nil
 	}
 	users, err := db.MGetUsers(ctx, tx, queryUserIDs)
@@ -57,7 +57,7 @@ func CheckAuthorOfVideo(ctx context.Context, tx *gorm.DB, videos []*core.Video, 
 	}
 
 	userMap, err := CheckAuthorFromUserID(ctx, tx, userIDs, userID)
-	if err != nil{
+	if err != nil {
 		return err
 	}
 
@@ -75,7 +75,7 @@ func CheckAuthorOfComment(ctx context.Context, tx *gorm.DB, comments []*interact
 	}
 
 	userMap, err := CheckAuthorFromUserID(ctx, tx, userIDs, userID)
-	if err != nil{
+	if err != nil {
 		return err
 	}
 

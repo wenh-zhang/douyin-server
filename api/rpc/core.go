@@ -36,6 +36,7 @@ func initCoreRPC() {
 	coreClient = c
 }
 
+// Feed Get the list of videos from response by calling rpc service
 func Feed(ctx context.Context, req *core.DouyinFeedRequest) ([]*core.Video, *int64, error) {
 	resp, err := coreClient.Feed(ctx, req)
 	if err != nil {
@@ -51,12 +52,12 @@ func Feed(ctx context.Context, req *core.DouyinFeedRequest) ([]*core.Video, *int
 	return resp.VideoList, resp.NextTime, nil
 }
 
-func UserRegister(ctx context.Context, req *core.DouyinUserRegisterRequest) (int64, error){
+func UserRegister(ctx context.Context, req *core.DouyinUserRegisterRequest) (int64, error) {
 	resp, err := coreClient.UserRegister(ctx, req)
-	if err != nil{
+	if err != nil {
 		return 0, err
 	}
-	if resp.StatusCode != errno.SuccessCode{
+	if resp.StatusCode != errno.SuccessCode {
 		var statusMsg string
 		if resp.StatusMsg != nil {
 			statusMsg = *resp.StatusMsg
@@ -66,12 +67,12 @@ func UserRegister(ctx context.Context, req *core.DouyinUserRegisterRequest) (int
 	return resp.UserId, nil
 }
 
-func UserLogin(ctx context.Context, req *core.DouyinUserLoginRequest) (int64, error){
+func UserLogin(ctx context.Context, req *core.DouyinUserLoginRequest) (int64, error) {
 	resp, err := coreClient.UserLogin(ctx, req)
-	if err != nil{
+	if err != nil {
 		return 0, err
 	}
-	if resp.StatusCode != errno.SuccessCode{
+	if resp.StatusCode != errno.SuccessCode {
 		var statusMsg string
 		if resp.StatusMsg != nil {
 			statusMsg = *resp.StatusMsg
@@ -81,12 +82,12 @@ func UserLogin(ctx context.Context, req *core.DouyinUserLoginRequest) (int64, er
 	return resp.UserId, nil
 }
 
-func UserInfo(ctx context.Context, req *core.DouyinUserRequest) (*core.User, error){
+func UserInfo(ctx context.Context, req *core.DouyinUserRequest) (*core.User, error) {
 	resp, err := coreClient.UserInfo(ctx, req)
-	if err != nil{
+	if err != nil {
 		return nil, err
 	}
-	if resp.StatusCode != errno.SuccessCode{
+	if resp.StatusCode != errno.SuccessCode {
 		var statusMsg string
 		if resp.StatusMsg != nil {
 			statusMsg = *resp.StatusMsg
@@ -96,12 +97,12 @@ func UserInfo(ctx context.Context, req *core.DouyinUserRequest) (*core.User, err
 	return resp.User, nil
 }
 
-func PublishAction(ctx context.Context, req *core.DouyinPublishActionRequest) error{
+func PublishAction(ctx context.Context, req *core.DouyinPublishActionRequest) error {
 	resp, err := coreClient.PublishAction(ctx, req)
-	if err != nil{
+	if err != nil {
 		return err
 	}
-	if resp.StatusCode != errno.SuccessCode{
+	if resp.StatusCode != errno.SuccessCode {
 		var statusMsg string
 		if resp.StatusMsg != nil {
 			statusMsg = *resp.StatusMsg
@@ -111,12 +112,12 @@ func PublishAction(ctx context.Context, req *core.DouyinPublishActionRequest) er
 	return nil
 }
 
-func PublishList(ctx context.Context, req *core.DouyinPublishListRequest) ([]*core.Video, error){
+func PublishList(ctx context.Context, req *core.DouyinPublishListRequest) ([]*core.Video, error) {
 	resp, err := coreClient.PublishList(ctx, req)
-	if err != nil{
+	if err != nil {
 		return nil, err
 	}
-	if resp.StatusCode != errno.SuccessCode{
+	if resp.StatusCode != errno.SuccessCode {
 		var statusMsg string
 		if resp.StatusMsg != nil {
 			statusMsg = *resp.StatusMsg

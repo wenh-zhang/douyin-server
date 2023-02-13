@@ -18,15 +18,7 @@ func (*Favorite) TableName() string {
 	return constant.FavoriteTableName
 }
 
-// GetFavoritesCountByVideoID get video favorite count
-func GetFavoritesCountByVideoID(ctx context.Context, db *gorm.DB, videoID int64) (int64, error) {
-	var count int64
-	if err := db.WithContext(ctx).Model(&Favorite{}).Where("video_id = ?", videoID).Count(&count).Error; err != nil {
-		return 0, err
-	}
-	return count, nil
-}
-
+// MGetFavoriteVideoIDsByUserID multiple get favorite video ids by user id
 func MGetFavoriteVideoIDsByUserID(ctx context.Context, db *gorm.DB, userID int64) ([]int64, error) {
 	videoIDs := make([]int64, 0)
 	if err := db.WithContext(ctx).Model(&Favorite{}).Where("user_id = ?", userID).Select("video_id").Order("created_at desc").Find(&videoIDs).Error; err != nil {
@@ -35,6 +27,7 @@ func MGetFavoriteVideoIDsByUserID(ctx context.Context, db *gorm.DB, userID int64
 	return videoIDs, nil
 }
 
+// CheckIfFavorite check whether the video had been liked by user
 func CheckIfFavorite(ctx context.Context, db *gorm.DB, videoID, userID int64) (bool, error) {
 	var count int64
 	if err := db.WithContext(ctx).Model(&Favorite{}).Where("video_id = ? and user_id = ?", videoID, userID).Count(&count).Error; err != nil {
@@ -57,11 +50,11 @@ func DeleteFavorite(ctx context.Context, db *gorm.DB, videoID, userID int64) err
 }
 
 // DeleteFavoriteOfVideo delete favorite info of a video
-func DeleteFavoriteOfVideo(ctx context.Context, db *gorm.DB, videoID int64) error{
+func DeleteFavoriteOfVideo(ctx context.Context, db *gorm.DB, videoID int64) error {
 	return db.WithContext(ctx).Where("video_id = ?", videoID).Delete(&Favorite{}).Error
 }
 
 // DeleteFavoriteOfUser delete favorite info of a user
-func DeleteFavoriteOfUser(ctx context.Context, db *gorm.DB, userID int64) error{
+func DeleteFavoriteOfUser(ctx context.Context, db *gorm.DB, userID int64) error {
 	return db.WithContext(ctx).Where("user_id = ?", userID).Delete(&Favorite{}).Error
 }

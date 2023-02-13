@@ -27,6 +27,7 @@ func MGetFollows(ctx context.Context, db *gorm.DB, userID int64) ([]*Follow, err
 	return res, nil
 }
 
+// CheckIfFollow check whether the user had been followed by anther user
 func CheckIfFollow(ctx context.Context, db *gorm.DB, fromUserID, toUserID int64) (bool, error) {
 	var count int64
 	if err := db.WithContext(ctx).Model(&Follow{}).Where("from_user_id = ? and to_user_id = ?", fromUserID, toUserID).Count(&count).Error; err != nil {
@@ -49,6 +50,6 @@ func DeleteFollow(ctx context.Context, db *gorm.DB, fromUserID, toUserID int64) 
 }
 
 // DeleteFollowOfUser delete follow relationship when a user is deleted
-func DeleteFollowOfUser(ctx context.Context, db *gorm.DB, fromUserID int64) error{
+func DeleteFollowOfUser(ctx context.Context, db *gorm.DB, fromUserID int64) error {
 	return db.WithContext(ctx).Where("from_user_id = ?", fromUserID).Delete(&Follow{}).Error
 }

@@ -19,7 +19,7 @@ func (*Comment) TableName() string {
 	return constant.CommentTableName
 }
 
-// MGetComments multiple get list of comments info
+// MGetComments multiple get list of comment by comment ids
 func MGetComments(ctx context.Context, db *gorm.DB, commentIDs []int64) ([]*Comment, error) {
 	res := make([]*Comment, 0)
 	if err := db.WithContext(ctx).Where("id = ?", commentIDs).Order("created_at desc").Find(&res).Error; err != nil {
@@ -28,7 +28,7 @@ func MGetComments(ctx context.Context, db *gorm.DB, commentIDs []int64) ([]*Comm
 	return res, nil
 }
 
-// MGetCommentsByVideoID multiple get list of comments info
+// MGetCommentsByVideoID multiple get list of comment by video id
 func MGetCommentsByVideoID(ctx context.Context, db *gorm.DB, videoID int64) ([]*Comment, error) {
 	res := make([]*Comment, 0)
 	if err := db.WithContext(ctx).Where("video_id = ?", videoID).Order("created_at desc").Find(&res).Error; err != nil {
@@ -37,12 +37,12 @@ func MGetCommentsByVideoID(ctx context.Context, db *gorm.DB, videoID int64) ([]*
 	return res, nil
 }
 
-// CreateComment create comment info
+// CreateComment create comment
 func CreateComment(ctx context.Context, db *gorm.DB, comments []*Comment) error {
 	return db.WithContext(ctx).Create(comments).Error
 }
 
-// DeleteComment delete comment info
+// DeleteComment delete comment
 func DeleteComment(ctx context.Context, db *gorm.DB, commentIDs []int64) error {
 	return db.WithContext(ctx).Where("id in ?", commentIDs).Delete(&Comment{}).Error
 }

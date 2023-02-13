@@ -67,7 +67,7 @@ func FavoriteList(ctx context.Context, req *interact.DouyinFavoriteListRequest) 
 	return resp.VideoList, nil
 }
 
-func CommentAction(ctx context.Context, req *interact.DouyinCommentActionRequest) (*interact.Comment, error){
+func CommentAction(ctx context.Context, req *interact.DouyinCommentActionRequest) (*interact.Comment, error) {
 	resp, err := interactClient.CommentAction(ctx, req)
 	if err != nil {
 		return nil, err
@@ -82,7 +82,7 @@ func CommentAction(ctx context.Context, req *interact.DouyinCommentActionRequest
 	return resp.Comment, nil
 }
 
-func CommentList(ctx context.Context, req *interact.DouyinCommentListRequest) ([]*interact.Comment, error){
+func CommentList(ctx context.Context, req *interact.DouyinCommentListRequest) ([]*interact.Comment, error) {
 	resp, err := interactClient.CommentList(ctx, req)
 	if err != nil {
 		return nil, err

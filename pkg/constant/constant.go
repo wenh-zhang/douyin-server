@@ -1,8 +1,29 @@
+// constants of the whole project
+// configure before running the project
+
 package constant
 
 import "time"
 
 var TokenSignedKey = []byte("golang")
+
+// server
+const (
+	CoreRPCAddress      = "127.0.0.1:8885"
+	InteractRPCAddress  = "127.0.0.1:8886"
+	SocialRPCAddress    = "127.0.0.1:8887"
+	APIServerAddress    = "127.0.0.1:8888"
+	CoreServiceName     = "core service"
+	InteractServiceName = "interact service"
+	SocialServiceName   = "social service"
+)
+
+// etcd
+const EtcdAddress = "127.0.0.1:2379"
+
+// ServerAddress set according to your host ip address
+// configure in the application
+const ServerAddress = "192.168.10.249:8888"
 
 const (
 	FeedLimit       = 30
@@ -21,33 +42,15 @@ const (
 	ActionType               = "action_type"
 	ActionTypeFavorite       = 1
 	ActionTypeCancelFavorite = 2
-	ActionTypeComment = 1
-	ActionTypeDeleteComment = 2
-	Data               = "data"
-	Title              = "title"
-	CommentText        = "comment_text"
-	CommentIdentityKey = "comment_id"
-	ToUserIdentityKey  = "to_user_id"
-	Content            = "content" //message的内容
+	ActionTypeComment        = 1
+	ActionTypeDeleteComment  = 2
+	Data                     = "data"
+	Title                    = "title"
+	CommentText              = "comment_text"
+	CommentIdentityKey       = "comment_id"
+	ToUserIdentityKey        = "to_user_id"
+	Content                  = "content" //message的内容
 )
-
-// server
-const (
-	CoreRPCAddress      = "127.0.0.1:8885"
-	InteractRPCAddress  = "127.0.0.1:8886"
-	SocialRPCAddress    = "127.0.0.1:8887"
-	APIServerAddress    = "127.0.0.1:8888"
-	CoreServiceName     = "core service"
-	PublishServiceName  = "publish service"
-	InteractServiceName = "interact service"
-	SocialServiceName   = "social service"
-)
-
-// etcd
-const EtcdAddress = "127.0.0.1:2379"
-
-// server ip:port
-const ServerAddress = "192.168.10.249:8888"
 
 // mysql
 const (

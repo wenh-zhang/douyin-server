@@ -8,7 +8,7 @@ import (
 )
 
 func User(user *db.User) *core.User {
-	if user == nil{
+	if user == nil {
 		return nil
 	}
 	return &core.User{
@@ -51,7 +51,7 @@ func Videos(videos []*db.Video) ([]*core.Video, *int64) {
 }
 
 func Comment(comment *db.Comment) *interact.Comment {
-	if comment == nil{
+	if comment == nil {
 		return nil
 	}
 	return &interact.Comment{
@@ -59,7 +59,7 @@ func Comment(comment *db.Comment) *interact.Comment {
 		User: &core.User{
 			Id: comment.UserID,
 		},
-		Content: comment.Content,
+		Content:    comment.Content,
 		CreateDate: comment.CreatedAt.String(),
 	}
 }

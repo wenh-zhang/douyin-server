@@ -18,10 +18,10 @@ func NewPublishService(ctx context.Context) *PublishService {
 
 func (s *PublishService) PublishAction(req *core.DouyinPublishActionRequest) error {
 	video := &db.Video{
-		UserID:  req.UserId,
-		PlayURL: req.PlayUrl,
+		UserID:   req.UserId,
+		PlayURL:  req.PlayUrl,
 		CoverURL: req.CoverUrl,
-		Title:   req.Title,
+		Title:    req.Title,
 	}
 	if err := db.CreateVideo(s.ctx, dal.GetConn(), []*db.Video{video}); err != nil {
 		return err
@@ -37,11 +37,11 @@ func (s *PublishService) PublishList(req *core.DouyinPublishListRequest) ([]*cor
 	}
 	convertVideos, _ := common.Videos(videos)
 	// check if user like the videos
-	if err = common.CheckIfLikeVideo(s.ctx, conn, convertVideos, &req.UserId); err != nil{
+	if err = common.CheckIfLikeVideo(s.ctx, conn, convertVideos, &req.UserId); err != nil {
 		return nil, err
 	}
 	// check author information, only need to query once because all videos have same author
-	if err = common.CheckAuthorOfVideo(s.ctx, conn, convertVideos, &req.UserId); err != nil{
+	if err = common.CheckAuthorOfVideo(s.ctx, conn, convertVideos, &req.UserId); err != nil {
 		return nil, err
 	}
 	return convertVideos, nil

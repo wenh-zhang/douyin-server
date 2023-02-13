@@ -12,11 +12,15 @@ import (
 	"strconv"
 )
 
+// VideoListResponse The returned json format of video list request
+// including request of favorite list, publish list and feed list
 type VideoListResponse struct {
 	Response
 	VideoList []*core.Video `json:"video_list,omitempty"`
 }
 
+// PublishAction The handler of request for user to publish a video
+// user is supposed to log in before sending this request, which means user id can be parsed from token
 func PublishAction(ctx context.Context, c *app.RequestContext) {
 	userID, _ := c.Get(constant.TokenUserIdentifyKey)
 	title := c.PostForm(constant.Title)
@@ -25,6 +29,7 @@ func PublishAction(ctx context.Context, c *app.RequestContext) {
 		SendResponse(c, NewResponse(err))
 	}
 
+	// call RPC service
 	if err = rpc.PublishAction(context.Background(), &core.DouyinPublishActionRequest{
 		UserId:   userID.(int64),
 		PlayUrl:  playURL,
@@ -37,6 +42,9 @@ func PublishAction(ctx context.Context, c *app.RequestContext) {
 	SendResponse(c, NewResponse(errno.Success))
 }
 
+// PublishList The handler of request for user to view a list of videos which are published by another user
+// token may be empty, because users who are not logged in can also view the list
+// this method has no authentication middleware before it
 func PublishList(ctx context.Context, c *app.RequestContext) {
 	request := new(core.DouyinPublishListRequest)
 	queryUserIDStr := c.Query(constant.UserIdentityKey)

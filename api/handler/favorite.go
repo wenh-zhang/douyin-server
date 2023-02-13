@@ -11,6 +11,8 @@ import (
 	"strconv"
 )
 
+// FavoriteAction Handler of request for a user to like the video
+// user is supposed to log in before sending this request, which means user id can be parsed from token
 func FavoriteAction(ctx context.Context, c *app.RequestContext) {
 	userID, _ := c.Get(constant.TokenUserIdentifyKey)
 	videoIDStr := c.Query(constant.VideoIdentityKey)
@@ -25,6 +27,8 @@ func FavoriteAction(ctx context.Context, c *app.RequestContext) {
 		SendResponse(c, NewResponse(err))
 		return
 	}
+
+	// call RPC service
 	if err = rpc.FavoriteAction(context.Background(), &interact.DouyinFavoriteActionRequest{
 		UserId:     userID.(int64),
 		VideoId:    videoID,
@@ -36,6 +40,9 @@ func FavoriteAction(ctx context.Context, c *app.RequestContext) {
 	SendResponse(c, NewResponse(errno.Success))
 }
 
+// FavoriteList Handler of request for user to view a list of videos which are liked by another user
+// token may be empty, because users who are not logged in can also view the list
+// this method has no authentication middleware before it
 func FavoriteList(ctx context.Context, c *app.RequestContext) {
 	request := new(interact.DouyinFavoriteListRequest)
 	queryUserIDStr := c.Query(constant.UserIdentityKey)
@@ -46,21 +53,23 @@ func FavoriteList(ctx context.Context, c *app.RequestContext) {
 	}
 	request.QueryUserId = queryUserID
 
+	// parse the token to find out whether there is user id in it
 	token := c.Query(constant.Token)
-	if len(token) != 0{
+	if len(token) != 0 {
 		claims, err := util.ParseToken(token)
-		if err == nil{
+		if err == nil {
 			request.UserId = claims.UserID
 		}
 	}
 
+	// call RPC service
 	videos, err := rpc.FavoriteList(context.Background(), request)
-	if err != nil{
+	if err != nil {
 		SendResponse(c, NewResponse(err))
 		return
 	}
 	SendResponse(c, VideoListResponse{
-		Response: NewResponse(errno.Success),
+		Response:  NewResponse(errno.Success),
 		VideoList: videos,
 	})
 }

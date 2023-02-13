@@ -12,6 +12,7 @@ func init() {
 	db = GetNewConn()
 }
 
+// GetNewConn create a new connection
 func GetNewConn() *gorm.DB {
 	db, err := gorm.Open(mysql.Open(constant.MySQLDefaultDSN),
 		&gorm.Config{
@@ -25,6 +26,7 @@ func GetNewConn() *gorm.DB {
 	return db
 }
 
+// GetConn return existing connection
 func GetConn() *gorm.DB {
 	return db
 }

@@ -70,7 +70,7 @@ func (s *UserService) Login(req *core.DouyinUserLoginRequest) (int64, error) {
 func (s *UserService) Info(req *core.DouyinUserRequest) (*core.User, error) {
 	conn := dal.GetConn()
 	userMap, err := common.CheckAuthorFromUserID(s.ctx, conn, []int64{req.QueryUserId}, &req.UserId)
-	if err != nil{
+	if err != nil {
 		return nil, err
 	}
 	return userMap[req.QueryUserId], nil

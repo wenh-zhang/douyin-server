@@ -23,6 +23,7 @@ _testmain.go
 *.cfg
 *.pptx
 *.log
+*.hz
 *nohup.out
 *settings.pyc
 *.sublime-project
@@ -31,8 +32,7 @@ _testmain.go
 .DS_Store
 /.idea
 /.vscode
-/output
+**/output
 *.local.yml
 dumped_hertz_remote_config.json
-/public/video
 		  

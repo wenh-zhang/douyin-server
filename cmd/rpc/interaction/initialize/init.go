@@ -1,7 +1,8 @@
 package initialize
 
 func Init() {
-	InitConfig()
-	InitDB()
-	InitRPC()
+	initConfig()
+	initDB()
+	initRedis()
+	initRPC()
 }

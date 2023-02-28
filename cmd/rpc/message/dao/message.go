@@ -20,6 +20,7 @@ func (s *Message) CreateMessage(ctx context.Context, message *model.Message) err
 	return s.db.WithContext(ctx).Create(message).Error
 }
 
+// GetMessageListByUserId 通过用户id获取聊天记录
 func (s *Message) GetMessageListByUserId(ctx context.Context, fromUserId, toUserId, preMsgTime int64) ([]*model.Message, error) {
 	messageList := make([]*model.Message, 0)
 	if err := s.db.WithContext(ctx).Where("created_at > ?", preMsgTime).Where("(from_user_id = ? and to_user_id = ?) or (from_user_id = ? and to_user_id = ?)",
@@ -29,6 +30,7 @@ func (s *Message) GetMessageListByUserId(ctx context.Context, fromUserId, toUser
 	return messageList, nil
 }
 
+// GetLatestMsgByUserId 通过用户id获取最新消息
 func (s *Message) GetLatestMsgByUserId(ctx context.Context, fromUserId, toUserId int64) (*model.Message, error) {
 	message := new(model.Message)
 	if err := s.db.WithContext(ctx).Where("(from_user_id = ? and to_user_id = ?) or (from_user_id = ? and to_user_id = ?)",
@@ -38,6 +40,7 @@ func (s *Message) GetLatestMsgByUserId(ctx context.Context, fromUserId, toUserId
 	return message, nil
 }
 
+// BatchGetLatestMsgByUserId 通过用户id列表批量获取最新消息
 func (s *Message) BatchGetLatestMsgByUserId(ctx context.Context, fromUserId int64, toUserIds []int64) ([]*model.Message, error) {
 	messageList := make([]*model.Message, 0)
 	for _, toUserId := range toUserIds {

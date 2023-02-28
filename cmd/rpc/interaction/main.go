@@ -4,6 +4,7 @@ import (
 	"douyin/cmd/rpc/interaction/dao"
 	"douyin/cmd/rpc/interaction/global"
 	"douyin/cmd/rpc/interaction/initialize"
+	"douyin/cmd/rpc/interaction/redis"
 	interaction "douyin/shared/kitex_gen/interaction/interactionserver"
 	"fmt"
 	"github.com/cloudwego/kitex/pkg/limit"
@@ -30,9 +31,11 @@ func main() {
 		panic(err)
 	}
 	svr := interaction.NewServer(&InteractionServerImpl{
-		FavoriteDao: dao.NewFavorite(global.DB),
-		CommentDao:  dao.NewComment(global.DB),
-		},
+		FavoriteDao:      dao.NewFavorite(global.DB),
+		CommentDao:       dao.NewComment(global.DB),
+		FavoriteRedisDao: redis.NewFavorite(global.RedisFavoriteClient),
+		CommentRedisDao:  redis.NewComment(global.RedisCommentClient),
+	},
 		server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: rpcConfig.Name}),
 		server.WithServiceAddr(addr),                                       // address
 		server.WithLimit(&limit.Option{MaxConnections: 1000, MaxQPS: 100}), // limit

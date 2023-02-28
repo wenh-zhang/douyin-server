@@ -16,6 +16,7 @@ func NewUser(db *gorm.DB) *User {
 	}
 }
 
+// BatchGetUserById 通过用户id列表批量获取用户
 func (s *User) BatchGetUserById(ctx context.Context, userIds []int64) ([]*model.User, error) {
 	if userIds == nil {
 		return nil, nil
@@ -31,6 +32,7 @@ func (s *User) BatchGetUserById(ctx context.Context, userIds []int64) ([]*model.
 	return users, nil
 }
 
+// GetUserByName 通过用户名获取用户
 func (s *User) GetUserByName(ctx context.Context, name string) (*model.User, error) {
 	user := new(model.User)
 	if err := s.db.WithContext(ctx).Model(&model.User{}).Where("name = ?", name).First(user).Error; err != nil {

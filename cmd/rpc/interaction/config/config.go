@@ -13,6 +13,12 @@ type MySQLConfig struct {
 	Password string
 }
 
+type RedisConfig struct {
+	Host     string
+	Port     int
+	Password string
+}
+
 type RPCConfig struct {
 	Host string
 	Port int

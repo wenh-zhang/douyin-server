@@ -20,12 +20,13 @@ func (s *Comment) CreateComment(ctx context.Context, comment *model.Comment) err
 	return s.db.WithContext(ctx).Create(comment).Error
 }
 
-func (s *Comment) DeleteComment(ctx context.Context, commentId int64) error {
+func (s *Comment) DeleteComment(ctx context.Context, videoId, commentId int64) error {
 	return s.db.WithContext(ctx).Delete(&model.Comment{
 		ID: commentId,
 	}).Error
 }
 
+// GetCommentListByVideoId 通过视频id获取评论列表
 func (s *Comment) GetCommentListByVideoId(ctx context.Context, videoId int64) ([]*model.Comment, error) {
 	comments := make([]*model.Comment, 0)
 	if err := s.db.WithContext(ctx).Where("video_id = ?", videoId).
@@ -35,6 +36,7 @@ func (s *Comment) GetCommentListByVideoId(ctx context.Context, videoId int64) ([
 	return comments, nil
 }
 
+// BatchGetCommentCountByVideoId 通过视频id列表批量获取视频评论数列表
 func (s *Comment) BatchGetCommentCountByVideoId(ctx context.Context, videoIds []int64) ([]int64, error) {
 	counts := make([]int64, 0)
 	var count int64

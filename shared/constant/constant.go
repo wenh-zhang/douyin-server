@@ -5,7 +5,6 @@ package constant
 
 import "time"
 
-const TokenSignedKey = "golang"
 
 // server
 const (
@@ -32,15 +31,44 @@ const (
 	EtcdPort = 2379
 )
 
-// ServerAddress set according to your host ip address
-// configure in the application
 const (
-	ServerHost = "192.168.10.249"
-	ServerPort = 8888
+	MinioPublicHost = "192.168.10.249"
+	MinioHost        = "127.0.0.1"
+	MinioPort = 9000
+	MinioAccessKeyID     = "minio"
+	MinioSecretAccessKey = "minio123"
+	MinioBucket          = "douyin"
+	MinioUseSSL          = false
 )
 
+// mysql
+const (
+	MySQLDefaultDSN   = "%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local"
+	MySQLHost         = "127.0.0.1"
+	MySQLPort         = 9910
+	MySQLDatabase     = "douyin"
+	MySQLUser         = "gorm"
+	MySQLPassword     = "gorm"
+	UserTableName     = "user"
+	VideoTableName    = "video"
+	FavoriteTableName = "favorite"
+	CommentTableName  = "comment"
+	FollowTableName   = "follow"
+	MessageTableName  = "message"
+)
+
+// redis
+const(
+	RedisHost = "127.0.0.1"
+	RedisPort = 6379
+	RedisPassword = "douyin"
+	RedisFavoriteDB = 0
+	RedisCommentDB = 1
+	RedisFollowDB = 2
+)
 
 const (
+	TokenSignedKey = "golang"
 	FeedLimit       = 30
 	TokenExpireTime = 30 * 24 * time.Hour
 )
@@ -63,22 +91,6 @@ const (
 	MsgTypeSend              = 1
 )
 
-// mysql
-const (
-	MySQLDefaultDSN   = "%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local"
-	MySQLHost         = "127.0.0.1"
-	MySQLPort         = 9910
-	MySQLDatabase     = "gorm"
-	MySQLUser         = "gorm"
-	MySQLPassword     = "gorm"
-	UserTableName     = "user"
-	VideoTableName    = "video"
-	FavoriteTableName = "favorite"
-	CommentTableName  = "comment"
-	FollowTableName   = "follow"
-	MessageTableName  = "message"
-)
-
 const (
 	SnowFlakeDataCenterId    = 1
 	MinioSnowFlakeWorkerId   = 1
@@ -87,12 +99,10 @@ const (
 	VideoSnowFlakeWorkerId   = 4
 )
 
+
+// ServerAddress set according to your host ip address
+// configure in the application
 const (
-	MinioPublicHost = "192.168.10.249"
-	MinioHost        = "127.0.0.1"
-	MinioPort = 9000
-	MinioAccessKeyID     = "minio"
-	MinioSecretAccessKey = "minio123"
-	MinioBucket          = "douyin"
-	MinioUseSSL          = false
+	ServerHost = "192.168.10.249"
+	ServerPort = 8888
 )

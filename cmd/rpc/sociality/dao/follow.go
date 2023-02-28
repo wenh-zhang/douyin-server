@@ -25,6 +25,7 @@ func (s *Follow) DeleteFollow(ctx context.Context, fromUserId, toUserId int64) e
 		Delete(&model.Follow{}).Error
 }
 
+// GetFollowIdList 获取关注用户id列表
 func (s *Follow) GetFollowIdList(ctx context.Context, userId int64) ([]int64, error) {
 	follows := make([]int64, 0)
 	if err := s.db.WithContext(ctx).Model(&model.Follow{}).Where("from_user_id = ?", userId).
@@ -34,6 +35,7 @@ func (s *Follow) GetFollowIdList(ctx context.Context, userId int64) ([]int64, er
 	return follows, nil
 }
 
+// GetFollowerIdList 获取粉丝用户id列表
 func (s *Follow) GetFollowerIdList(ctx context.Context, userId int64) ([]int64, error) {
 	followers := make([]int64, 0)
 	if err := s.db.WithContext(ctx).Model(&model.Follow{}).Where("to_user_id = ?", userId).
@@ -43,6 +45,7 @@ func (s *Follow) GetFollowerIdList(ctx context.Context, userId int64) ([]int64, 
 	return followers, nil
 }
 
+// GetFriendIdList 获取朋友用户id列表
 func (s *Follow) GetFriendIdList(ctx context.Context, userId int64) ([]int64, error) {
 	follows := make([]int64, 0)
 	friends := make([]int64, 0)
@@ -57,6 +60,7 @@ func (s *Follow) GetFriendIdList(ctx context.Context, userId int64) ([]int64, er
 	return friends, nil
 }
 
+// BatchGetFollowCountByUserId 通过用户id列表批量获取关注数
 func (s *Follow) BatchGetFollowCountByUserId(ctx context.Context, userIds []int64) ([]int64, error) {
 	counts := make([]int64, 0)
 	var count int64
@@ -69,6 +73,7 @@ func (s *Follow) BatchGetFollowCountByUserId(ctx context.Context, userIds []int6
 	return counts, nil
 }
 
+// BatchGetFollowerCountByUserId 通过用户id列表批量获取粉丝数
 func (s *Follow) BatchGetFollowerCountByUserId(ctx context.Context, userIds []int64) ([]int64, error) {
 	counts := make([]int64, 0)
 	var count int64
@@ -81,6 +86,7 @@ func (s *Follow) BatchGetFollowerCountByUserId(ctx context.Context, userIds []in
 	return counts, nil
 }
 
+// BatchGetFollowInfoByUserId 通过用户id列表批量获取关注信息
 func (s *Follow) BatchGetFollowInfoByUserId(ctx context.Context, localUserId int64, targetUserIds []int64) ([]bool, error) {
 	userIdList := make([]int64, 0)
 	if err := s.db.WithContext(ctx).Model(&model.Follow{}).

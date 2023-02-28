@@ -80,6 +80,7 @@ func (s *Favorite) GetFavoriteVideoIdListByUserId(ctx context.Context, userId in
 	return videoIds, nil
 }
 
+// BatchGetFavoriteCountByUserId 根据用户id列表批量获取用户点赞数
 func (s *Favorite) BatchGetFavoriteCountByUserId(ctx context.Context, userIds []int64) ([]int64, error) {
 	counts := make([]int64, 0)
 	var count int64

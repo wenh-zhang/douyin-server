@@ -9,7 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func InitDB() {
+func initDB() {
 	var err error
 	mysqlConfig := global.MySQLConfig
 	dsn := fmt.Sprintf(constant.MySQLDefaultDSN, mysqlConfig.User, mysqlConfig.Password, mysqlConfig.Host, mysqlConfig.Port, mysqlConfig.Database)

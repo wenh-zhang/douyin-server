@@ -4,6 +4,7 @@ import (
 	"douyin/cmd/rpc/sociality/dao"
 	"douyin/cmd/rpc/sociality/global"
 	"douyin/cmd/rpc/sociality/initialize"
+	"douyin/cmd/rpc/sociality/redis"
 	sociality "douyin/shared/kitex_gen/sociality/socialityservice"
 	"fmt"
 	"github.com/cloudwego/kitex/pkg/limit"
@@ -31,6 +32,7 @@ func main() {
 	}
 	svr := sociality.NewServer(&SocialityServiceImpl{
 		Dao: dao.NewFollow(global.DB),
+		FollowRedisDao: redis.NewFollow(global.RedisFollowClient),
 	},
 		server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: rpcConfig.Name}),
 		server.WithServiceAddr(addr),                                       // address

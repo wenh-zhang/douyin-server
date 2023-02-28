@@ -34,7 +34,11 @@ const (
 
 // ServerAddress set according to your host ip address
 // configure in the application
-const ServerAddress = "192.168.10.249:8888"
+const (
+	ServerHost = "192.168.10.249"
+	ServerPort = 8888
+)
+
 
 const (
 	FeedLimit       = 30
@@ -77,7 +81,18 @@ const (
 
 const (
 	SnowFlakeDataCenterId    = 1
-	UserSnowFlakeWorkerId    = 1
-	CommentSnowFlakeWorkerId = 2
-	VideoSnowFlakeWorkerId   = 3
+	MinioSnowFlakeWorkerId   = 1
+	UserSnowFlakeWorkerId    = 2
+	CommentSnowFlakeWorkerId = 3
+	VideoSnowFlakeWorkerId   = 4
+)
+
+const (
+	MinioPublicHost = "192.168.10.249"
+	MinioHost        = "127.0.0.1"
+	MinioPort = 9000
+	MinioAccessKeyID     = "minio"
+	MinioSecretAccessKey = "minio123"
+	MinioBucket          = "douyin"
+	MinioUseSSL          = false
 )

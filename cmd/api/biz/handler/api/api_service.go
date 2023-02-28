@@ -7,7 +7,6 @@ import (
 	"douyin/cmd/api/biz/model/api"
 	"douyin/cmd/api/global"
 	"douyin/cmd/api/pkg"
-	"douyin/cmd/api/service"
 	"douyin/shared/constant"
 	"douyin/shared/errno"
 	"douyin/shared/kitex_gen/interaction"
@@ -154,7 +153,19 @@ func PublishAction(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 	userId, _ := c.Get(constant.TokenUserIdentifyKey)
-	playURL, coverURL, err := service.Upload(userId.(int64), c)
+	//playURL, coverURL, err := service.Upload(userId.(int64), c)
+	//if err != nil {
+	//	resp.StatusCode, resp.StatusMsg = errno.ServiceErr.ErrorDetail()
+	//	pkg.SendResponse(c, resp)
+	//	return
+	//}
+	fh, err := c.FormFile("data")
+	if err != nil {
+		resp.StatusCode, resp.StatusMsg = errno.ParamErr.ErrorDetail()
+		pkg.SendResponse(c, resp)
+		return
+	}
+	playURL, coverURL, err := global.UploadService.UploadVideo(fh)
 	if err != nil {
 		resp.StatusCode, resp.StatusMsg = errno.ServiceErr.ErrorDetail()
 		pkg.SendResponse(c, resp)

@@ -1,6 +1,13 @@
 package initialize
 
+import (
+	"douyin/cmd/api/global"
+	"douyin/cmd/api/service"
+)
+
 func Init() {
-	InitConfig()
-	InitRPC()
+	initConfig()
+	initRPC()
+	initMinio()
+	global.UploadService = service.NewUpload(global.MinioClient, global.MinioConfig)
 }

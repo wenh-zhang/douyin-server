@@ -6,10 +6,17 @@ type EtcdConfig struct {
 }
 
 type MinioConfig struct {
-	Host        string
-	Port int
+	Host            string
+	Port            int
 	AccessKeyID     string
 	SecretAccessKey string
 	UserSSL         bool
-	Bucket string
+	Bucket          string
+}
+
+type AmqpConfig struct {
+	Host     string
+	Port     int
+	User     string
+	Password string
 }

@@ -3,8 +3,10 @@
 package main
 
 import (
+	"douyin/cmd/api/global"
 	"douyin/cmd/api/initialize"
 	"github.com/cloudwego/hertz/pkg/app/server"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cloudwego/hertz/pkg/network/standard"
 	"github.com/hertz-contrib/gzip"
 	"github.com/hertz-contrib/pprof"
@@ -12,14 +14,18 @@ import (
 
 func main() {
 	initialize.Init()
+	go func() {
+		if err := global.UploadService.SubscribeVideo(); err != nil {
+			hlog.Errorf("upload goroutine err: %s", err.Error())
+			panic(err)
+		}
+	}()
 	h := server.Default(
 		server.WithMaxRequestBodySize(1000<<20), // 1000MB
 		server.WithTransport(standard.NewTransporter),
 		server.WithStreamBody(true),
 	)
 	h.Use(gzip.Gzip(gzip.DefaultCompression))
-	h.Static("/video", "../../public")
-	h.Static("/cover", "../../public")
 	pprof.Register(h)
 	register(h)
 	h.Spin()

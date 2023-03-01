@@ -14,7 +14,7 @@ import (
 	"time"
 )
 
-func InitRPC(){
+func InitRPC() {
 	initInteractionRPC()
 	initSocialityRPC()
 	initMessageRPC()

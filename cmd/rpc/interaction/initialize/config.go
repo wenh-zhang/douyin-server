@@ -28,4 +28,10 @@ func initConfig() {
 		Port:     constant.RedisPort,
 		Password: constant.RedisPassword,
 	}
+	global.AmqpConfig = &config.AmqpConfig{
+		Host:     constant.AmqpHost,
+		Port:     constant.AmqpPort,
+		User:     constant.AmqpUser,
+		Password: constant.AmqpPassword,
+	}
 }

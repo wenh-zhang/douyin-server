@@ -12,11 +12,17 @@ func initConfig() {
 		Port: constant.EtcdPort,
 	}
 	global.MinioConfig = &config.MinioConfig{
-		Host: constant.MinioHost,
-		Port: constant.MinioPort,
+		Host:            constant.MinioHost,
+		Port:            constant.MinioPort,
 		AccessKeyID:     constant.MinioAccessKeyID,
 		SecretAccessKey: constant.MinioSecretAccessKey,
 		Bucket:          constant.MinioBucket,
 		UserSSL:         constant.MinioUseSSL,
+	}
+	global.AmqpConfig = &config.AmqpConfig{
+		Host:     constant.AmqpHost,
+		Port:     constant.AmqpPort,
+		User:     constant.AmqpUser,
+		Password: constant.AmqpPassword,
 	}
 }

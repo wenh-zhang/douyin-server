@@ -9,19 +9,21 @@ import (
 	user "douyin/shared/kitex_gen/user/userservice"
 	video "douyin/shared/kitex_gen/video/videoservice"
 	"github.com/minio/minio-go/v7"
+	"github.com/streadway/amqp"
 )
 
-var(
-	UserClient user.Client
-	VideoClient video.Client
-	MessageClient message.Client
+var (
+	UserClient        user.Client
+	VideoClient       video.Client
+	MessageClient     message.Client
 	InteractionClient interaction.Client
-	SocialityClient sociality.Client
+	SocialityClient   sociality.Client
 
-	MinioClient *minio.Client
-	MinioConfig *config.MinioConfig
+	MinioClient   *minio.Client
+	AmqpConn      *amqp.Connection
 	UploadService *service.Upload
 
-	EtcdConfig *config.EtcdConfig
-
+	EtcdConfig  *config.EtcdConfig
+	MinioConfig *config.MinioConfig
+	AmqpConfig  *config.AmqpConfig
 )

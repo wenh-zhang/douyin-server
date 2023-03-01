@@ -5,6 +5,7 @@ import (
 	"douyin/cmd/rpc/interaction/dao"
 	"douyin/cmd/rpc/interaction/global"
 	"douyin/cmd/rpc/interaction/model"
+	"douyin/cmd/rpc/interaction/mq"
 	"douyin/cmd/rpc/interaction/pkg"
 	"douyin/cmd/rpc/interaction/redis"
 	"douyin/shared/constant"
@@ -22,10 +23,12 @@ import (
 
 // InteractionServerImpl implements the last service interface defined in the IDL.
 type InteractionServerImpl struct {
-	FavoriteDao      *dao.Favorite
-	CommentDao       *dao.Comment
-	FavoriteRedisDao *redis.Favorite
-	CommentRedisDao  *redis.Comment
+	FavoriteDao       *dao.Favorite
+	CommentDao        *dao.Comment
+	FavoriteRedisDao  *redis.Favorite
+	CommentRedisDao   *redis.Comment
+	FavoritePublisher *mq.FavoritePublisher
+	CommentPublisher  *mq.CommentPublisher
 }
 
 // Favorite implements the InteractionServerImpl interface.
@@ -36,23 +39,21 @@ func (s *InteractionServerImpl) Favorite(ctx context.Context, req *interaction.D
 		VideoId:   req.VideoId,
 		CreatedAt: time.Now().Unix(),
 	}
+	if err = s.FavoritePublisher.Publish(&mq.FavoriteWithAction{
+		Favorite:   favorite,
+		ActionType: req.ActionType,
+	}); err != nil {
+		klog.Errorf("create favorite error: %s", err.Error())
+		resp.BaseResp = util.BuildBaseResp(errno.InteractionServerErr.WithMessage("create favorite error"))
+		return resp, nil
+	}
 	if req.ActionType == constant.ActionTypeFavorite {
-		if err = s.FavoriteDao.CreateFavorite(ctx, favorite); err != nil {
-			klog.Errorf("create favorite error: %s", err.Error())
-			resp.BaseResp = util.BuildBaseResp(errno.InteractionServerErr.WithMessage("create favorite error"))
-			return resp, nil
-		}
 		if err = s.FavoriteRedisDao.Like(ctx, favorite); err != nil {
 			klog.Errorf("create favorite by redis error: %s", err.Error())
 			resp.BaseResp = util.BuildBaseResp(errno.InteractionServerErr.WithMessage("create favorite error"))
 			return resp, nil
 		}
 	} else if req.ActionType == constant.ActionTypeCancelFavorite {
-		if err = s.FavoriteDao.DeleteFavorite(ctx, req.UserId, req.VideoId); err != nil {
-			klog.Errorf("cancel favorite error: %s", err.Error())
-			resp.BaseResp = util.BuildBaseResp(errno.InteractionServerErr.WithMessage("cancel favorite error"))
-			return resp, nil
-		}
 		if err = s.FavoriteRedisDao.Unlike(ctx, req.UserId, req.VideoId); err != nil {
 			klog.Errorf("cancel favorite error: %s", err.Error())
 			resp.BaseResp = util.BuildBaseResp(errno.InteractionServerErr.WithMessage("cancel favorite error"))
@@ -100,13 +101,15 @@ func (s *InteractionServerImpl) Comment(ctx context.Context, req *interaction.Do
 		Content:   req.CommentText,
 		CreatedAt: time.Now().Unix(),
 	}
+	if err = s.CommentPublisher.Publish(&mq.CommentWithAction{
+		Comment:    comment,
+		ActionType: req.ActionType,
+	}); err != nil {
+		klog.Errorf("create comment error: %s", err.Error())
+		resp.BaseResp = util.BuildBaseResp(errno.InteractionServerErr.WithMessage("create comment error"))
+		return resp, nil
+	}
 	if req.ActionType == constant.ActionTypeComment {
-		// 需要实时返回，后续不可放入mq中
-		if err = s.CommentDao.CreateComment(ctx, comment); err != nil {
-			klog.Errorf("create comment error: %s", err.Error())
-			resp.BaseResp = util.BuildBaseResp(errno.InteractionServerErr.WithMessage("create comment error"))
-			return resp, nil
-		}
 		if err = s.CommentRedisDao.CreateComment(ctx, comment); err != nil {
 			klog.Errorf("create comment by redis error: %s", err.Error())
 			resp.BaseResp = util.BuildBaseResp(errno.InteractionServerErr.WithMessage("create comment error"))
@@ -132,11 +135,6 @@ func (s *InteractionServerImpl) Comment(ctx context.Context, req *interaction.Do
 		resp.BaseResp = util.BuildBaseResp(errno.Success)
 		return resp, nil
 	} else if req.ActionType == constant.ActionTypeDeleteComment {
-		if err = s.CommentDao.DeleteComment(ctx, req.VideoId, req.CommentId); err != nil {
-			klog.Errorf("delete comment error: %s", err.Error())
-			resp.BaseResp = util.BuildBaseResp(errno.InteractionServerErr.WithMessage("delete comment error"))
-			return resp, nil
-		}
 		if err = s.CommentRedisDao.DeleteComment(ctx, req.VideoId, req.CommentId); err != nil {
 			klog.Errorf("delete comment by redis error: %s", err.Error())
 			resp.BaseResp = util.BuildBaseResp(errno.InteractionServerErr.WithMessage("delete comment error"))

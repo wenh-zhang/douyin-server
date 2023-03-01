@@ -5,6 +5,7 @@ import (
 	"douyin/cmd/rpc/user/dao"
 	"douyin/cmd/rpc/user/global"
 	"douyin/cmd/rpc/user/model"
+	"douyin/cmd/rpc/user/mq"
 	"douyin/cmd/rpc/user/pkg"
 	"douyin/shared/constant"
 	"douyin/shared/errno"
@@ -21,8 +22,9 @@ import (
 
 // UserServiceImpl implements the last service interface defined in the IDL.
 type UserServiceImpl struct {
-	Jwt *util.JWT
-	Dao *dao.User
+	Jwt       *util.JWT
+	Dao       *dao.User
+	Publisher *mq.Publisher
 }
 
 // Register implements the UserServiceImpl interface.
@@ -52,7 +54,7 @@ func (s *UserServiceImpl) Register(ctx context.Context, req *user.DouyinUserRegi
 		resp.BaseResp = util.BuildBaseResp(errno.UserServerErr.WithMessage("create user error"))
 		return resp, nil
 	}
-	if err = s.Dao.CreateUser(ctx, u); err != nil {
+	if err = s.Publisher.Publish(u); err != nil {
 		klog.Errorf("create user error: %s", err.Error())
 		resp.BaseResp = util.BuildBaseResp(errno.UserServerErr.WithMessage("create user error"))
 		return resp, nil

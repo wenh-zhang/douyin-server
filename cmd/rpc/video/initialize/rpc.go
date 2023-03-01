@@ -13,7 +13,7 @@ import (
 	"time"
 )
 
-func InitRPC(){
+func InitRPC() {
 	initInteractionRPC()
 	initUserRPC()
 }

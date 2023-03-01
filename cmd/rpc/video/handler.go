@@ -5,6 +5,7 @@ import (
 	"douyin/cmd/rpc/video/dao"
 	"douyin/cmd/rpc/video/global"
 	"douyin/cmd/rpc/video/model"
+	"douyin/cmd/rpc/video/mq"
 	"douyin/cmd/rpc/video/pkg"
 	"douyin/shared/constant"
 	"douyin/shared/errno"
@@ -21,7 +22,8 @@ import (
 
 // VideoServiceImpl implements the last service interface defined in the IDL.
 type VideoServiceImpl struct {
-	Dao *dao.Video
+	Dao       *dao.Video
+	Publisher *mq.Publisher
 }
 
 // Feed implements the VideoServiceImpl interface.
@@ -67,13 +69,14 @@ func (s *VideoServiceImpl) Publish(ctx context.Context, req *video.DouyinPublish
 		resp.BaseResp = util.BuildBaseResp(errno.VideoServerErr.WithMessage("snow flake generate error"))
 		return resp, nil
 	}
-	if err = s.Dao.CreateVideo(ctx, &model.Video{
+	video := &model.Video{
 		ID:       sf.NextVal(),
 		UserID:   req.UserId,
 		PlayURL:  req.PlayUrl,
 		CoverURL: req.CoverUrl,
 		Title:    req.Title,
-	}); err != nil {
+	}
+	if err = s.Publisher.Publish(video); err != nil {
 		klog.Errorf("create video error: %s", err.Error())
 		resp.BaseResp = util.BuildBaseResp(errno.VideoServerErr.WithMessage("create video error"))
 		return resp, nil

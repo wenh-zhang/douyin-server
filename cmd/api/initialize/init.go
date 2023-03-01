@@ -9,5 +9,6 @@ func Init() {
 	initConfig()
 	initRPC()
 	initMinio()
-	global.UploadService = service.NewUpload(global.MinioClient, global.MinioConfig)
+	initAmqp()
+	global.UploadService = service.NewUpload(global.MinioClient, global.MinioConfig, global.AmqpConn)
 }

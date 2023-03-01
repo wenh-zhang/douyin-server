@@ -9,4 +9,3 @@ import (
 func SendResponse(c *app.RequestContext, obj interface{}) {
 	c.JSON(consts.StatusOK, obj)
 }
-

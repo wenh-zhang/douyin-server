@@ -43,8 +43,8 @@ var (
 	AuthorizeFailErr     = NewErrNo(int32(errno.Code_AuthorizeFailErr), "authorize fail")
 	RPCVideoErr          = NewErrNo(int32(errno.Code_RPCVideoErr), "call rpc video error")
 	VideoServerErr       = NewErrNo(int32(errno.Code_VideoServerErr), "video server error")
-	RPCMessageErr           = NewErrNo(int32(errno.Code_RPCMessageErr), "call rpc message error")
-	MessageServerErr        = NewErrNo(int32(errno.Code_MessageServerErr), "message server error")
+	RPCMessageErr        = NewErrNo(int32(errno.Code_RPCMessageErr), "call rpc message error")
+	MessageServerErr     = NewErrNo(int32(errno.Code_MessageServerErr), "message server error")
 )
 
 // ConvertErr convert error to Errno

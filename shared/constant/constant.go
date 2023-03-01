@@ -5,7 +5,6 @@ package constant
 
 import "time"
 
-
 // server
 const (
 	RPCInteractionHost = "127.0.0.1"
@@ -32,9 +31,9 @@ const (
 )
 
 const (
-	MinioPublicHost = "192.168.10.249"
-	MinioHost        = "127.0.0.1"
-	MinioPort = 9000
+	MinioPublicHost      = "192.168.10.249"
+	MinioHost            = "127.0.0.1"
+	MinioPort            = 9000
 	MinioAccessKeyID     = "minio"
 	MinioSecretAccessKey = "minio123"
 	MinioBucket          = "douyin"
@@ -58,17 +57,26 @@ const (
 )
 
 // redis
-const(
-	RedisHost = "127.0.0.1"
-	RedisPort = 6379
-	RedisPassword = "douyin"
+const (
+	RedisHost       = "127.0.0.1"
+	RedisPort       = 6379
+	RedisPassword   = "douyin"
 	RedisFavoriteDB = 0
-	RedisCommentDB = 1
-	RedisFollowDB = 2
+	RedisCommentDB  = 1
+	RedisFollowDB   = 2
+)
+
+// amqp
+const (
+	AmqpURL      = "amqp://%s:%s@%s:%d/"
+	AmqpHost     = "127.0.0.1"
+	AmqpPort     = 5672
+	AmqpUser     = "guest"
+	AmqpPassword = "guest"
 )
 
 const (
-	TokenSignedKey = "golang"
+	TokenSignedKey  = "golang"
 	FeedLimit       = 30
 	TokenExpireTime = 30 * 24 * time.Hour
 )
@@ -98,7 +106,6 @@ const (
 	CommentSnowFlakeWorkerId = 3
 	VideoSnowFlakeWorkerId   = 4
 )
-
 
 // ServerAddress set according to your host ip address
 // configure in the application

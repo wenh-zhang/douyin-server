@@ -5,4 +5,5 @@ func Init() {
 	initDB()
 	initRedis()
 	initRPC()
+	initAmqp()
 }

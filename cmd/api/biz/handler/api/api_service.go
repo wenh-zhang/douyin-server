@@ -153,12 +153,6 @@ func PublishAction(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 	userId, _ := c.Get(constant.TokenUserIdentifyKey)
-	//playURL, coverURL, err := service.Upload(userId.(int64), c)
-	//if err != nil {
-	//	resp.StatusCode, resp.StatusMsg = errno.ServiceErr.ErrorDetail()
-	//	pkg.SendResponse(c, resp)
-	//	return
-	//}
 	fh, err := c.FormFile("data")
 	if err != nil {
 		resp.StatusCode, resp.StatusMsg = errno.ParamErr.ErrorDetail()

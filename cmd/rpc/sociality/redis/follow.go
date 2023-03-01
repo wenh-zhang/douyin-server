@@ -102,14 +102,14 @@ func (s *Follow) BatchGetFollowerCountByUserId(ctx context.Context, userIds []in
 
 func (s *Follow) GetFollowInfoByUserId(ctx context.Context, localUserId int64, targetUserId int64) (bool, error) {
 	is1, err1 := s.client.SIsMember(ctx, "follow"+strconv.FormatInt(localUserId, 10), targetUserId).Result()
-	if err1 != nil{
+	if err1 != nil {
 		return false, err1
 	}
 	is2, err2 := s.client.SIsMember(ctx, "follow"+strconv.FormatInt(targetUserId, 10), localUserId).Result()
-	if err2 != nil{
+	if err2 != nil {
 		return false, err2
 	}
-	if is1 != is2{
+	if is1 != is2 {
 		return false, errno.SocialityServerErr.WithMessage("dirty data in redis")
 	}
 	return is1, nil
@@ -118,9 +118,9 @@ func (s *Follow) GetFollowInfoByUserId(ctx context.Context, localUserId int64, t
 // BatchGetFollowInfoByUserId 通过用户id列表批量获取关注信息
 func (s *Follow) BatchGetFollowInfoByUserId(ctx context.Context, localUserId int64, targetUserIds []int64) ([]bool, error) {
 	res := make([]bool, 0)
-	for _, targetUserId := range targetUserIds{
+	for _, targetUserId := range targetUserIds {
 		is, err := s.GetFollowInfoByUserId(ctx, localUserId, targetUserId)
-		if err != nil{
+		if err != nil {
 			return nil, err
 		}
 		res = append(res, is)

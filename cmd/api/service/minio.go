@@ -4,12 +4,14 @@ import (
 	"bytes"
 	"context"
 	"douyin/cmd/api/config"
+	mq2 "douyin/cmd/api/mq"
 	"douyin/shared/constant"
 	"fmt"
 	"github.com/GUAIK-ORG/go-snowflake/snowflake"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/disintegration/imaging"
 	"github.com/minio/minio-go/v7"
+	"github.com/streadway/amqp"
 	ffmpeg "github.com/u2takey/ffmpeg-go"
 	"mime/multipart"
 	"os"
@@ -28,12 +30,16 @@ type UploadInfo struct {
 type Upload struct {
 	minioClient *minio.Client
 	minioConfig *config.MinioConfig
+	publisher   *mq2.Publisher
+	subscriber  *mq2.Subscriber
 }
 
-func NewUpload(minioClient *minio.Client, minioConfig *config.MinioConfig) *Upload {
+func NewUpload(minioClient *minio.Client, minioConfig *config.MinioConfig, amqpConn *amqp.Connection) *Upload {
 	return &Upload{
 		minioClient: minioClient,
 		minioConfig: minioConfig,
+		publisher:   mq2.NewPublisher(amqpConn, "upload"),
+		subscriber:  mq2.NewSubscriber(amqpConn, "upload"),
 	}
 }
 
@@ -81,23 +87,36 @@ func (s *Upload) UploadVideo(fh *multipart.FileHeader) (playURL, coverURL string
 		hlog.Errorf("get snap shot error: %s", err.Error())
 		return "", "", err
 	}
+	s.publisher.Publish(info)
 
-	if _, err = s.minioClient.FPutObject(context.Background(), s.minioConfig.Bucket, info.coverURL, info.coverTmpPath, minio.PutObjectOptions{
-		ContentType: "image/png",
-	}); err != nil {
-		hlog.Errorf("upload cover image error: %s", err.Error())
-		return "", "", err
-	}
-	_ = os.Remove(info.coverTmpPath)
-	if _, err = s.minioClient.FPutObject(context.Background(), s.minioConfig.Bucket, info.videoURL, info.videoTmpPath, minio.PutObjectOptions{
-		ContentType: fmt.Sprintf("video/%s", suffix[1:]),
-	}); err != nil {
-		hlog.Errorf("upload video error: %s", err.Error())
-		return "", "", err
-	}
-	_ = os.Remove(info.videoTmpPath)
 	urlPrefix := fmt.Sprintf("http://%s:%d/%s/", constant.MinioPublicHost, s.minioConfig.Port, s.minioConfig.Bucket)
 	return urlPrefix + info.videoURL, urlPrefix + info.coverURL, nil
+}
+
+func (s *Upload) SubscribeVideo() error {
+	uploadInfoChan, closeFunc, err := s.subscriber.Subscribe()
+	defer closeFunc()
+	if err != nil {
+		return err
+	}
+	for info := range uploadInfoChan {
+		if _, err = s.minioClient.FPutObject(context.Background(), s.minioConfig.Bucket, info.coverURL, info.coverTmpPath, minio.PutObjectOptions{
+			ContentType: "image/png",
+		}); err != nil {
+			hlog.Errorf("upload cover image error: %s", err.Error())
+			continue
+		}
+		_ = os.Remove(info.coverTmpPath)
+		suffix := path.Ext(info.videoTmpPath)
+		if _, err = s.minioClient.FPutObject(context.Background(), s.minioConfig.Bucket, info.videoURL, info.videoTmpPath, minio.PutObjectOptions{
+			ContentType: fmt.Sprintf("video/%s", suffix[1:]),
+		}); err != nil {
+			hlog.Errorf("upload video error: %s", err.Error())
+			continue
+		}
+		_ = os.Remove(info.videoTmpPath)
+	}
+	return nil
 }
 
 func getSnapShot(videoPath, coverPath string) error {

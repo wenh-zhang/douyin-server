@@ -10,7 +10,7 @@ type Video struct {
 	PlayURL   string `json:"play_url"`
 	CoverURL  string `json:"cover_url"`
 	Title     string `json:"title"`
-	CreatedAt int64 `json:"created_at"`
+	CreatedAt int64  `json:"created_at"`
 }
 
 func (*Video) TableName() string {

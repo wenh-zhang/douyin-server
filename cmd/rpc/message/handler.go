@@ -4,6 +4,7 @@ import (
 	"context"
 	"douyin/cmd/rpc/message/dao"
 	"douyin/cmd/rpc/message/model"
+	"douyin/cmd/rpc/message/mq"
 	"douyin/cmd/rpc/message/pkg"
 	"douyin/shared/errno"
 	"douyin/shared/kitex_gen/message"
@@ -15,18 +16,20 @@ import (
 
 // MessageServiceImpl implements the last service interface defined in the IDL.
 type MessageServiceImpl struct {
-	Dao *dao.Message
+	Dao       *dao.Message
+	Publisher *mq.Publisher
 }
 
 // SendMessage implements the MessageServiceImpl interface.
 func (s *MessageServiceImpl) SendMessage(ctx context.Context, req *message.DouyinMessageActionRequest) (resp *message.DouyinMessageActionResponse, err error) {
 	resp = new(message.DouyinMessageActionResponse)
-	if err = s.Dao.CreateMessage(ctx, &model.Message{
+	message := &model.Message{
 		FromUserId: req.LocalUserId,
 		ToUserId:   req.TargetUserId,
 		Content:    req.Content,
 		CreatedAt:  time.Now().Unix(),
-	}); err != nil {
+	}
+	if err = s.Publisher.Publish(message); err != nil {
 		klog.Errorf("create message error: %s", err.Error())
 		resp.BaseResp = util.BuildBaseResp(errno.MessageServerErr.WithMessage("create message error"))
 		return resp, nil

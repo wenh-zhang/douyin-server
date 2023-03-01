@@ -18,3 +18,10 @@ type RPCConfig struct {
 	Port int
 	Name string
 }
+
+type AmqpConfig struct {
+	Host     string
+	Port     int
+	User     string
+	Password string
+}

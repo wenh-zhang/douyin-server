@@ -16,7 +16,7 @@ import (
 	"time"
 )
 
-func initRPC(){
+func initRPC() {
 	initUserRPC()
 	initVideoRPC()
 	initInteractionRPC()

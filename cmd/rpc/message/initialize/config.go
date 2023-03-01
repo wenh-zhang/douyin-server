@@ -23,4 +23,10 @@ func InitConfig() {
 		Port: constant.RPCMessagePort,
 		Name: constant.RPCMessageName,
 	}
+	global.AmqpConfig = &config.AmqpConfig{
+		Host:     constant.AmqpHost,
+		Port:     constant.AmqpPort,
+		User:     constant.AmqpUser,
+		Password: constant.AmqpPassword,
+	}
 }

@@ -7,7 +7,7 @@ import (
 	"github.com/go-redis/redis/v8"
 )
 
-func initRedis(){
+func initRedis() {
 	config := global.RedisConfig
 	addr := fmt.Sprintf("%s:%d", config.Host, config.Port)
 	global.RedisFavoriteClient = redis.NewClient(&redis.Options{

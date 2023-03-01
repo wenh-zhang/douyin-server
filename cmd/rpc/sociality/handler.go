@@ -4,6 +4,7 @@ import (
 	"context"
 	"douyin/cmd/rpc/sociality/dao"
 	"douyin/cmd/rpc/sociality/model"
+	"douyin/cmd/rpc/sociality/mq"
 	"douyin/cmd/rpc/sociality/redis"
 	"douyin/shared/constant"
 	"douyin/shared/errno"
@@ -15,8 +16,9 @@ import (
 
 // SocialityServiceImpl implements the last service interface defined in the IDL.
 type SocialityServiceImpl struct {
-	Dao *dao.Follow
+	Dao            *dao.Follow
 	FollowRedisDao *redis.Follow
+	Publisher      *mq.Publisher
 }
 
 // Relation implements the SocialityServiceImpl interface.
@@ -26,23 +28,21 @@ func (s *SocialityServiceImpl) Relation(ctx context.Context, req *sociality.Douy
 		FromUserID: req.LocalUserId,
 		ToUserID:   req.TargetUserId,
 	}
+	if err = s.Publisher.Publish(&mq.FollowWithAction{
+		Follow:     follow,
+		ActionType: req.ActionType,
+	}); err != nil {
+		klog.Errorf("follow error: %s", err.Error())
+		resp.BaseResp = util.BuildBaseResp(errno.SocialityServerErr.WithMessage("follow error"))
+		return resp, nil
+	}
 	if req.ActionType == constant.ActionTypeFollow {
-		if err = s.Dao.CreateFollow(ctx, follow); err != nil {
-			klog.Errorf("follow error: %s", err.Error())
-			resp.BaseResp = util.BuildBaseResp(errno.SocialityServerErr.WithMessage("follow error"))
-			return resp, nil
-		}
 		if err = s.FollowRedisDao.CreateFollow(ctx, follow); err != nil {
 			klog.Errorf("follow by redis error: %s", err.Error())
 			resp.BaseResp = util.BuildBaseResp(errno.SocialityServerErr.WithMessage("follow error"))
 			return resp, nil
 		}
 	} else if req.ActionType == constant.ActionTypeCancelFollow {
-		if err = s.Dao.DeleteFollow(ctx, req.LocalUserId, req.TargetUserId); err != nil {
-			klog.Errorf("cancel follow error: %s", err.Error())
-			resp.BaseResp = util.BuildBaseResp(errno.SocialityServerErr.WithMessage("cancel follow error"))
-			return resp, nil
-		}
 		if err = s.FollowRedisDao.DeleteFollow(ctx, req.LocalUserId, req.TargetUserId); err != nil {
 			klog.Errorf("cancel follow by redis error: %s", err.Error())
 			resp.BaseResp = util.BuildBaseResp(errno.SocialityServerErr.WithMessage("cancel follow error"))

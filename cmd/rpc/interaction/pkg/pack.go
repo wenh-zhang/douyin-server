@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func PackComment(comment *model.Comment, user *base.User)*base.Comment{
+func PackComment(comment *model.Comment, user *base.User) *base.Comment {
 	return &base.Comment{
 		Id:         comment.ID,
 		User:       user,
